@@ -20,7 +20,7 @@ function AccordionSummary({ children, expanded, setExpanded }) {
         padding: '16px',
         background: 'none',
         border: 'none',
-        borderBottom: '1px solid #eee',
+        borderBottom: '1px solid #d1c4e9',
         fontWeight: 500,
         fontSize: 16,
         cursor: 'pointer',
@@ -28,7 +28,7 @@ function AccordionSummary({ children, expanded, setExpanded }) {
         display: 'flex',
         alignItems: 'center',
         gap: 8,
-        color: '#1976d2',
+        color: '#7c4dff',
       }}
     >
       <span style={{
@@ -44,7 +44,7 @@ function AccordionSummary({ children, expanded, setExpanded }) {
 function AccordionDetails({ children, expanded }) {
   if (!expanded) return null;
   return (
-    <div style={{ padding: '16px', borderBottom: '1px solid #eee', background: '#fafbfc', color: '#000' }}>
+    <div style={{ padding: '16px', borderBottom: '1px solid #d1c4e9', background: '#ede7f6', color: '#222' }}>
       {children}
     </div>
   );

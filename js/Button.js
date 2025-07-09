@@ -16,12 +16,12 @@ const styles = {
     margin: '0 8px',
   },
   text: {
-    color: '#1976d2',
+    color: '#00897b',
     background: 'none',
   },
   contained: {
     color: '#fff',
-    background: '#1976d2',
+    background: '#7c4dff',
     boxShadow: '0 2px 4px #0002',
   },
   outlined: {
@@ -30,8 +30,8 @@ const styles = {
     border: '1.5px solid #1976d2',
   },
   agree: {
-    color: '#000',
-    background: '#FFD600',
+    color: '#fff',
+    background: '#ff9800',
     boxShadow: '0 2px 4px #0002',
   },
 };
