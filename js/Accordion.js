@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-function Accordion({ children, defaultExpanded = false }) {
+function Accordion({ children, defaultExpanded = false, summaryAlign = 'left', renderSummary }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   return React.Children.map(children, child =>
-    React.cloneElement(child, { expanded, setExpanded })
+    React.cloneElement(child, { expanded, setExpanded, summaryAlign, renderSummary })
   );
 }
 
-function AccordionSummary({ children, expanded, setExpanded }) {
+function AccordionSummary({ children, expanded, setExpanded, summaryAlign, renderSummary }) {
   return (
     <button
       type="button"
@@ -16,8 +16,8 @@ function AccordionSummary({ children, expanded, setExpanded }) {
       onClick={() => setExpanded(!expanded)}
       style={{
         width: '100%',
-        textAlign: 'left',
-        padding: '16px',
+        textAlign: summaryAlign,
+        padding: '10px',
         background: 'none',
         border: 'none',
         borderBottom: '1px solid #eee',
@@ -29,6 +29,7 @@ function AccordionSummary({ children, expanded, setExpanded }) {
         alignItems: 'center',
         gap: 8,
         color: '#1976d2',
+        justifyContent: summaryAlign === 'center' ? 'center' : summaryAlign === 'right' ? 'flex-end' : 'flex-start',
       }}
     >
       <span style={{
@@ -36,7 +37,7 @@ function AccordionSummary({ children, expanded, setExpanded }) {
         transition: 'transform 0.2s',
         transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)'
       }}>▶</span>
-      {children}
+      {renderSummary ? renderSummary(children, expanded) : children}
     </button>
   );
 }
@@ -50,21 +51,63 @@ function AccordionDetails({ children, expanded }) {
   );
 }
 
+function AccordionGroup({ children, attached = false, style, ...rest }) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: attached ? 0 : 16,
+        ...style,
+      }}
+      {...rest}
+    >
+      {React.Children.map(children, (child, idx) =>
+        attached && React.isValidElement(child)
+          ? React.cloneElement(child, {
+              style: {
+                ...child.props.style,
+                borderRadius:
+                  idx === 0
+                    ? '12px 12px 0 0'
+                    : idx === React.Children.count(children) - 1
+                    ? '0 0 12px 12px'
+                    : '0',
+                margin: 0,
+                borderTop: idx !== 0 ? '1px solid #eee' : undefined,
+              },
+            })
+          : child
+      )}
+    </div>
+  );
+}
+
 Accordion.propTypes = {
   children: PropTypes.node.isRequired,
-  defaultExpanded: PropTypes.bool
+  defaultExpanded: PropTypes.bool,
+  summaryAlign: PropTypes.oneOf(['left', 'center', 'right']),
+  renderSummary: PropTypes.func,
 };
 AccordionSummary.propTypes = {
   children: PropTypes.node.isRequired,
   expanded: PropTypes.bool,
-  setExpanded: PropTypes.func
+  setExpanded: PropTypes.func,
+  summaryAlign: PropTypes.oneOf(['left', 'center', 'right']),
+  renderSummary: PropTypes.func,
 };
 AccordionDetails.propTypes = {
   children: PropTypes.node.isRequired,
   expanded: PropTypes.bool
 };
+AccordionGroup.propTypes = {
+  children: PropTypes.node.isRequired,
+  attached: PropTypes.bool,
+  style: PropTypes.object,
+};
 
 Accordion.Summary = AccordionSummary;
 Accordion.Details = AccordionDetails;
+Accordion.Group = AccordionGroup;
 
 export default Accordion; 
